@@ -1,8 +1,8 @@
 branch-defaults:
   master:
-    environment: shortener-live
+    environment: short-live
   development:
-    environment: shortener-dev
+    environment: short-dev
 global:
   application_name: Shortener
   default_ec2_keyname: sergio
