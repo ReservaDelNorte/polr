@@ -1,0 +1,18 @@
+branch-defaults:
+  master:
+    environment: short-live
+  development:
+    environment: short-dev
+global:
+  application_name: Shortener
+  default_ec2_keyname: sergio
+  default_platform: arn:aws:elasticbeanstalk:us-east-1::platform/PHP 5.5 running on
+    64bit Amazon Linux/2.1.6
+  default_region: us-east-1
+  include_git_submodules: true
+  instance_profile: null
+  platform_name: null
+  platform_version: null
+  profile: null
+  sc: git
+  workspace_type: Application
