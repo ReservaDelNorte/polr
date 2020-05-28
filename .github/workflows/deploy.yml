@@ -1,6 +1,6 @@
 name: Deploy
 on:
-  push:
+  pull_request:
     branches:
       - master
       - development
@@ -14,6 +14,8 @@ jobs:
 
       - name: Generate deployment package
         run: zip deploy.zip -r * .[^.]* -x "vendor/*"
+
+      - run: echo $GITHUB_REF
 
       - name: Set eb env name if is development
         if: github.ref == 'development'
@@ -30,13 +32,13 @@ jobs:
       - name: Use current time
         run: echo "::set-env name=TIME::${{ steps.current-time.outputs.time }}"
 
-      - name: Deploy to EB
-        uses: einaregilsson/beanstalk-deploy@v10
-        with:
-          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          application_name: Shortener
-          environment_name: ${{ env.EB_ENV_NAME }}
-          version_label: ${{ env.TIME }}-${{ env.EB_ENV_NAME }}
-          region: us-west-1
-          deployment_package: deploy.zip
+      # - name: Deploy to EB
+      #   uses: einaregilsson/beanstalk-deploy@v10
+      #   with:
+      #     aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     application_name: Shortener
+      #     environment_name: ${{ env.EB_ENV_NAME }}
+      #     version_label: ${{ env.TIME }}-${{ env.EB_ENV_NAME }}
+      #     region: us-west-1
+      #     deployment_package: deploy.zip
