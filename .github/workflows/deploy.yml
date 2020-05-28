@@ -1,6 +1,6 @@
 name: Deploy
 on:
-  push:
+  pull_request:
     branches:
       - master
       - development
@@ -14,6 +14,8 @@ jobs:
 
       - name: Generate deployment package
         run: zip deploy.zip -r * .[^.]* -x "vendor/*"
+
+      - run: echo GITHUB_REF
 
       - name: Set eb env name if is development
         if: github.base_ref == 'development'
