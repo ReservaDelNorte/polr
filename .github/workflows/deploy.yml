@@ -24,11 +24,14 @@ jobs:
 
       - name: Set environment name if is development
         if: github.base_ref == 'development'
-        run: echo "dev"
+        run: echo "::set-dev environment_name=${{ github.base_ref }}"
 
       - name: Set environment name if is master
         if: github.base_ref == 'master'
         run: echo "master"
+
+      - run: echo ${{ env.environment_name }}
+      - run: echo ${{ env }}
 
       # - name: Deploy to EB
       #   uses: einaregilsson/beanstalk-deploy@v10
