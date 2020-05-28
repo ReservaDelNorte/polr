@@ -20,7 +20,7 @@ jobs:
         run: zip deploy.zip *
 
       - name: echo ref
-        run: echo github.ref
+        run: echo ${{ github.ref }}
 
       - name: Set environment name if is development
         if: github.ref == 'development'
