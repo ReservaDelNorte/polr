@@ -20,11 +20,11 @@ jobs:
         run: zip deploy.zip *
 
       - name: Set environment name if is development
-        if: ${{ github.ref == 'development'}}
+        if: github.ref == 'development'
         run: echo "dev"
 
       - name: Set environment name if is master
-        if: ${{ github.ref == 'master' }}
+        if: github.ref == 'master'
         run: echo "master"
 
       # - name: Deploy to EB
