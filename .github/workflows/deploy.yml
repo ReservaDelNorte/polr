@@ -1,0 +1,35 @@
+name: Deploy
+on:
+  push:
+    branches:
+      - master
+      - development
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v1
+
+      - name: Generate deployment package
+        run: zip deploy.zip -r * .[^.]* -x "vendor/*"
+
+      - name: Set eb env name if is development
+        if: github.base_ref == 'development'
+        run: echo "::set-env name=EB_ENV_NAME::short-dev"
+
+      - name: Set eb env name if is development
+        if: github.base_ref == 'master'
+        run: echo "::set-env name=EB_ENV_NAME::short-dev"
+
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v10
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: Shortener
+          environment_name: ${{ env.EB_ENV_NAME }}
+          # version_label: 12345
+          region: us-west-1
+          deployment_package: deploy.zip
