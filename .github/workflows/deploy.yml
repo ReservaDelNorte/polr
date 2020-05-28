@@ -19,7 +19,7 @@ jobs:
       - name: Generate deployment package
         run: zip deploy.zip *
 
-      - name: Set environment name if is development
+      - name: echo ref
         run: echo github.ref
 
       - name: Set environment name if is development
