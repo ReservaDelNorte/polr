@@ -28,11 +28,9 @@ jobs:
         id: current-time
 
       - name: Use current time
-        env:
-          TIME: "${{ steps.current-time.outputs.time }}"
-        run: echo $TIME
-
-      - run: echo $TIME
+        run: echo "::set-env name=TIME::${{ steps.current-time.outputs.time }}"
+      
+      - run: echo ${{ env.TIME }}
 
       # - name: Deploy to EB
       #   uses: einaregilsson/beanstalk-deploy@v10
