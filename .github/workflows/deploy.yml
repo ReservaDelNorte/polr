@@ -16,6 +16,7 @@ jobs:
         run: zip deploy.zip -r * .[^.]* -x "vendor/*"
 
       - run: echo $GITHUB_REF
+      - run: echo ${{ JSON.stringify(github) }}
 
       - name: Set eb env name if is development
         if: github.ref == 'development'
