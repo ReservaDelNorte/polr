@@ -23,6 +23,13 @@ jobs:
         if: github.base_ref == 'master'
         run: echo "::set-env name=EB_ENV_NAME::short-dev"
 
+      - name: Get current time
+        uses: gerred/actions/current-time@master
+        id: current-time
+
+      - name: Use current time
+        run: echo "::set-env name=TIME::${{ steps.current-time.outputs.time }}"
+
       - name: Deploy to EB
         uses: einaregilsson/beanstalk-deploy@v10
         with:
@@ -30,6 +37,6 @@ jobs:
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           application_name: Shortener
           environment_name: ${{ env.EB_ENV_NAME }}
-          # version_label: 12345
+          version_label: ${{ env.TIME }}-${{ env.EB_ENV_NAME }}
           region: us-west-1
           deployment_package: deploy.zip
