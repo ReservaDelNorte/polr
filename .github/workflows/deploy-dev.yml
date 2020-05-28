@@ -29,5 +29,5 @@ jobs:
           application_name: Shortener
           environment_name: short-dev
           version_label: ${{ env.TIME }}-short-dev
-          region: us-west-1
+          region: us-east-1
           deployment_package: deploy.zip
