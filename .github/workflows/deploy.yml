@@ -1,9 +1,5 @@
 name: Deploy
 on:
-  push:
-    branches:
-      - master
-      - development
   pull_request:
     branches:
         - master
@@ -19,30 +15,21 @@ jobs:
       - name: Generate deployment package
         run: zip deploy.zip *
 
-      - name: echo ref
-        run: echo ${{ github.base_ref }}
-
-      - name: Set environment name if is development
+      - name: Set eb env name if is development
         if: github.base_ref == 'development'
         run: echo "::set-env name=EB_ENV_NAME::short-dev"
 
-      # - name: Set environment name if is master
-      #   if: github.base_ref == 'master'
-      #   run: echo "master"
+      - name: Set eb env name if is development
+        if: github.base_ref == 'master'
+        run: echo "::set-env name=EB_ENV_NAME::short-dev"
 
-      # - run: echo ${{ env.environment_name }}
-
-      # - run: echo "::set-dev environment_name=::$(echo ${ github.base_ref })"
-
-      - run: echo ${{ env.EB_ENV_NAME }}
-
-      # - name: Deploy to EB
-      #   uses: einaregilsson/beanstalk-deploy@v10
-      #   with:
-      #     aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #     application_name: Shortener
-      #     environment_name: MyApplication-Environment
-      #     version_label: 12345
-      #     region: us-west-2
-      #     deployment_package: deploy.zip
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v10
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: Shortener
+          environment_name: ${{ env.EB_ENV_NAME }}
+          # version_label: 12345
+          region: us-west-1
+          deployment_package: deploy.zip
