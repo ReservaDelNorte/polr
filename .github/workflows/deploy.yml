@@ -30,7 +30,7 @@ jobs:
       - name: Use current time
         run: echo "::set-env name=TIME::${{ steps.current-time.outputs.time }}"
       
-      - run: echo ${{ env.TIME }}
+      - run: echo ${{ env.TIME }}-${{ env.EB_ENV_NAME }}
 
       # - name: Deploy to EB
       #   uses: einaregilsson/beanstalk-deploy@v10
