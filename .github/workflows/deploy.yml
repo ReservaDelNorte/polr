@@ -16,11 +16,11 @@ jobs:
         run: zip deploy.zip -r * .[^.]* -x "vendor/*"
 
       - name: Set eb env name if is development
-        if: github.base_ref == 'development'
+        if: github.ref == 'development'
         run: echo "::set-env name=EB_ENV_NAME::short-dev"
 
       - name: Set eb env name if is development
-        if: github.base_ref == 'master'
+        if: github.ref == 'master'
         run: echo "::set-env name=EB_ENV_NAME::short-dev"
 
       - name: Get current time
