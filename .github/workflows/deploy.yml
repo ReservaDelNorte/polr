@@ -23,11 +23,11 @@ jobs:
         run: echo ${{ github.base_ref }}
 
       - name: Set environment name if is development
-        if: github.ref == 'development'
+        if: github.base_ref == 'development'
         run: echo "dev"
 
       - name: Set environment name if is master
-        if: github.ref == 'master'
+        if: github.base_ref == 'master'
         run: echo "master"
 
       # - name: Deploy to EB
