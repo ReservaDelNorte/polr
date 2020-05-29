@@ -5,8 +5,6 @@ use Illuminate\Http\Request;
 use App\Factories\LinkFactory;
 use App\Helpers\LinkHelper;
 use App\Exceptions\Api\ApiException;
-use App\Helpers\ClickHelper;
-use App\Models\Link;
 
 class ApiLinkController extends ApiController {
     protected function getShortenedLink($long_url, $is_secret, $custom_ending, $link_ip, $username, $response_type) {
@@ -138,32 +136,5 @@ class ApiLinkController extends ApiController {
         else {
             throw new ApiException('NOT_FOUND', 'Link not found.', 404, $response_type);
         }
-    }
-
-    public function getUrl(Request $request, $shortUrl, $secret_key = false)
-    {
-        $link = Link::where('short_url', $shortUrl)
-            ->first();
-        if ($link == null || !$link->is_disabled) {
-        	return response()->json([], 204);
-        }
-
-        if ($link->secret_key && $link->secret_key != $secret_key) {
-            return response()->json([], 401);
-        }
-
-        $clicks = intval($link->clicks);
-        if (is_int($clicks)) {
-            $clicks += 1;
-        }
-        $link->clicks = $clicks;
-        $link->save();
-
-        if (env('SETTING_ADV_ANALYTICS')) {
-            // Record advanced analytics if option is enabled
-            ClickHelper::recordClick($link, $request);
-        }
-
-        return response()->json(['url' => $link->long_url], 200);
     }
 }
