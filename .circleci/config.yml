@@ -24,12 +24,10 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      - run: "sudo apt-get update"
-      - run: "sudo apt-get install python3.7 -y"
-      - run: "curl https://bootstrap.pypa.io/get-pip.py"
-      - run: "sudo apt-get install python3-pip"
-      - run: "pip3 install --upgrade --user awscli"
-      - run: "pip3 install --upgrade --user awsebcli"
+      - run: curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+      - run: sudo python get-pip.py
+      - run: pip install --upgrade --user awscli
+      - run: pip install --upgrade --user awsebcli
       - run: export PATH=~/.local/bin:$PATH
       - run: echo "REVISION=$CIRCLE_SHA1" > rev.txt
       - deploy:
