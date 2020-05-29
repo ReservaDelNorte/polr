@@ -164,8 +164,6 @@ class ApiLinkController extends ApiController {
             ClickHelper::recordClick($link, $request);
         }
 
-        if ($request->input('action') == 'show') {
-            return response()->json(['url' => $link->long_url], 200);
-        }
+        return response()->json(['url' => $link->long_url], 200);
     }
 }
