@@ -24,10 +24,21 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      - run: curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-      - run: sudo python get-pip.py
-      - run: pip install --upgrade --user awscli
-      - run: pip install --upgrade --user awsebcli
+      - run: "sudo apt-get update && sudo apt-get upgrade"
+      - install-python3:
+          command: |
+              sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev wget
+              curl -O https://www.python.org/ftp/python/3.8.0/Python-3.8.0.tar.xz
+              tar -xf Python-3.8.0.tar.xz
+              cd Python-3.8.0
+              ./configure --enable-optimizations
+              make
+              sudo make altinstall
+      # - run: "sudo apt-get install python3.7 -y"
+      - run: "curl https://bootstrap.pypa.io/get-pip.py"
+      - run: "sudo apt-get install python3-pip"
+      - run: "pip3 install --upgrade --user awscli"
+      - run: "pip3 install --upgrade --user awsebcli"
       - run: export PATH=~/.local/bin:$PATH
       - run: echo "REVISION=$CIRCLE_SHA1" > rev.txt
       - deploy:
