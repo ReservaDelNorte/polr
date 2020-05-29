@@ -25,17 +25,17 @@ jobs:
     steps:
       - checkout
       - run: "sudo apt-get update && sudo apt-get upgrade"
-      - 
       - run:
+          name: install python
           command: |
-              sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev wget
-              curl -O https://www.python.org/ftp/python/3.8.0/Python-3.8.0.tar.xz
-              tar -xf Python-3.8.0.tar.xz
-              cd Python-3.8.0
-              ./configure --enable-optimizations
-              make
-              sudo make altinstall
-              cd ..
+            sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev wget
+            curl -O https://www.python.org/ftp/python/3.8.0/Python-3.8.0.tar.xz
+            tar -xf Python-3.8.0.tar.xz
+            cd Python-3.8.0
+            ./configure --enable-optimizations
+            make
+            sudo make altinstall
+            cd ..
       # - run: "sudo apt-get install python3.7 -y"
       - run: "curl https://bootstrap.pypa.io/get-pip.py"
       - run: "sudo apt-get install python3-pip"
@@ -43,7 +43,8 @@ jobs:
       - run: "pip3 install --upgrade --user awsebcli"
       - run: export PATH=~/.local/bin:$PATH
       - run: echo "REVISION=$CIRCLE_SHA1" > rev.txt
-      - deploy:
+      - run:
+          name: deploy
           command: |
             LABEL_NAME=polr-$CIRCLE_BRANCH-$(date '+%Y%m%d_%H%M%S')
             git archive --format=zip HEAD > polr.zip
