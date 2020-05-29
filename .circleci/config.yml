@@ -1,0 +1,55 @@
+jobs:
+  build:
+    docker:
+      - image: circleci/php:5.6
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+      - run: sudo php composer-setup.php --quiet --filename composer
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "composer.json" }}
+          - v1-dependencies-
+      - run: php composer install
+      - save_cache:
+          paths:
+            - ./vendor
+          key: v1-dependencies-{{ checksum "composer.json" }}
+
+  deploy:
+    docker:
+      - image: circleci/php:5.6
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: "sudo apt-get update"
+      - run: "sudo apt-get install python3.7 -y"
+      - run: "curl https://bootstrap.pypa.io/get-pip.py"
+      - run: "sudo apt-get install python3-pip"
+      - run: "pip3 install --upgrade --user awscli"
+      - run: "pip3 install --upgrade --user awsebcli"
+      - run: export PATH=~/.local/bin:$PATH
+      - run: echo "REVISION=$CIRCLE_SHA1" > rev.txt
+      - deploy:
+          command: |
+            LABEL_NAME=polr-$CIRCLE_BRANCH-$(date '+%Y%m%d_%H%M%S')
+            git archive --format=zip HEAD > polr.zip
+            zip -ru polr.zip rev.txt
+            ~/.local/bin/eb deploy --staged --label=$LABEL_NAME
+
+version: 2
+workflows:
+  build-and-deploy:
+    jobs:
+      - build
+      - deploy:
+          filters:
+            branches:
+              only:
+                - development
+                - master
+          requires:
+            - build
+
+  version: 2
