@@ -76,5 +76,5 @@ $app->group(['prefix' => '/api/v2', 'namespace' => 'App\Http\Controllers\Api', '
     $app->get('data/link', ['as' => 'api_link_analytics', 'uses' => 'ApiAnalyticsController@lookupLinkStats']);
     $app->post('data/link', ['as' => 'api_link_analytics', 'uses' => 'ApiAnalyticsController@lookupLinkStats']);
 
-    $app->get('/{short_url}', ['uses' => 'ApiLinkController@getUrl']);
+    $app->get('get_url/{short_url}', ['uses' => 'ApiLinkController@getUrl']);
 });
