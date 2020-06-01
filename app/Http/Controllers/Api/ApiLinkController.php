@@ -144,12 +144,12 @@ class ApiLinkController extends ApiController {
     {
         $link = Link::where('short_url', $shortUrl)
             ->first();
-        if ($link == null || !$link->is_disabled) {
-        	return response()->json([], 204);
+        if ($link == null || $link->is_disabled) {
+            return response(null, 204)->header('Content-Type', 'application/json');;
         }
-
-        if ($link->secret_key && $link->secret_key != $secret_key) {
-            return response()->json([], 401);
+        
+        if ($link->secret_key && $link->secret_key !== '' && $link->secret_key != $secret_key) {
+            return response(null, 401)->header('Content-Type', 'application/json');;
         }
 
         $clicks = intval($link->clicks);
@@ -163,7 +163,6 @@ class ApiLinkController extends ApiController {
             // Record advanced analytics if option is enabled
             ClickHelper::recordClick($link, $request);
         }
-
-        return response()->json(['url' => $link->long_url], 200);
+        return response(['url' => $link->long_url], 200)->header('Content-Type', 'application/json');;
     }
 }
