@@ -140,15 +140,15 @@ class ApiLinkController extends ApiController {
         }
     }
 
-    public function getUrl(Request $request, $shortUrl, $secret_key = false)
+    public function getUrl(Request $request)
     {
-        $link = Link::where('short_url', $shortUrl)
+        $link = Link::where('short_url', $request->input('short_url'))
             ->first();
         if ($link == null || $link->is_disabled) {
             return response(null, 204)->header('Content-Type', 'application/json');;
         }
         
-        if ($link->secret_key && $link->secret_key !== '' && $link->secret_key != $secret_key) {
+        if ($link->secret_key) {
             return response(null, 401)->header('Content-Type', 'application/json');;
         }
 
