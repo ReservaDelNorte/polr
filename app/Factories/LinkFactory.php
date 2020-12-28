@@ -55,7 +55,7 @@ class LinkFactory {
                 looks like a shortened URL.');
         }
 
-        if (!$is_secret && (!isset($custom_ending) || $custom_ending === '') && (LinkHelper::longLinkExists($long_url, $creator) !== false)) {
+        if ((LinkHelper::longLinkExists($long_url, $creator) !== false) && !$is_secret && (!isset($custom_ending) || $custom_ending == null)) {
             // if link is not specified as secret, is non-custom, and
             // already exists in Polr, lookup the value and return
             $existing_link = LinkHelper::longLinkExists($long_url, $creator);
@@ -86,6 +86,12 @@ class LinkFactory {
                 // generate a counter-based ending or use existing ending if possible
                 $link_ending = LinkHelper::findSuitableEnding();
             }
+        }
+
+        $existing_short_link = LinkHelper::longAndShortLinkExists($long_url, $link_ending);
+        if ($existing_short_link)
+        {
+            return self::formatLink($existing_short_links);
         }
 
         $link = new Link;
