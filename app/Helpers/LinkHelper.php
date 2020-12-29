@@ -84,20 +84,6 @@ class LinkHelper {
         }
     }
 
-    static public function longAndShortLinkExists($long_url, $link_ending) {
-
-        $link = Link::longUrl($long_url)
-            ->where('short_url', $link_ending)
-            ->orderBy('id', 'DESC')
-            ->first();
-
-        if ($link) {
-            return $link->short_url;
-        }
-
-        return false;
-    }
-
     static public function validateEnding($link_ending) {
         $is_valid_ending = preg_match('/^[a-zA-Z0-9-_]+$/', $link_ending);
         return $is_valid_ending;
