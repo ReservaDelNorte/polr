@@ -88,12 +88,6 @@ class LinkFactory {
             }
         }
 
-        $existing_short_link = LinkHelper::longAndShortLinkExists($long_url, $link_ending);
-        if ($existing_short_link)
-        {
-            return self::formatLink($existing_short_links);
-        }
-
         $link = new Link;
         $link->short_url = $link_ending;
         $link->long_url  = $long_url;
